@@ -1,0 +1,42 @@
+/* Empty. Add your own CSS if you like */
+.tab-login {
+	background: url("https://s-media-cache-ak0.pinimg.com/564x/e2/04/dc/e204dcb087889c97bcf0aa8e3e65f184.jpg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    width: 80%;
+    height: 246px;
+    margin: auto;
+    z-index: 2;
+    position: relative;
+}
+
+    .pane {
+        background: url("https://s-media-cache-ak0.pinimg.com/564x/e2/04/dc/e204dcb087889c97bcf0aa8e3e65f184.jpg") no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        background-size: cover;
+    }
+
+
+.icon.new-item {
+	position: absolute;
+	right: 20px;
+	font-size: 20px;
+	bottom: 13px;
+}
+.cancel-create {
+	position: absolute;
+	right: 20px;
+	font-size: 14px;
+	bottom: 13px;
+	color:#ef4e3a;
+}
+
+[ng-click], [data-ng-click], [x-ng-click] {
+    cursor: pointer; 
+}
+/* Ionic Overwrite! */
+.item-icon-left .icon, .item-icon-right .icon {
+	font-size: 22px;
+}
