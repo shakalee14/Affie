@@ -17,7 +17,11 @@
         -moz-background-size: cover;
         background-size: cover;
     }
-
+body
+        {
+            font: arial;
+            font-size: 60;
+        }
 
 .icon.new-item {
 	position: absolute;
@@ -33,7 +37,7 @@
 	color:#ef4e3a;
 }
 
-[ng-click], [data-ng-click], [x-ng-click] {
+[ng-click], [data-ng-click], [x-ng-click], [ng-click] {
     cursor: pointer; 
 }
 /* Ionic Overwrite! */

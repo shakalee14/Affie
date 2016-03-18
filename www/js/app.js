@@ -33,7 +33,7 @@ angular.module('SimpleRESTIonic', ['ionic', 'backand', 'SimpleRESTIonic.controll
                 abstract: true,
                 templateUrl: 'templates/tabs.html'
             })
-            .state('tab.dashboard', {
+            .state('tab.login', {
                 url: '/dashboard',
                 views: {
                     'tab-dashboard': {
@@ -50,7 +50,7 @@ angular.module('SimpleRESTIonic', ['ionic', 'backand', 'SimpleRESTIonic.controll
                     }
                 }
             })
-            .state('tab.login', {
+            .state('tab.dashboard', {
                 url: '/login',
                 views: {
                     'tab-login': {
@@ -60,7 +60,7 @@ angular.module('SimpleRESTIonic', ['ionic', 'backand', 'SimpleRESTIonic.controll
                 }
             });
 
-        $urlRouterProvider.otherwise('/tabs/dashboard');
+        $urlRouterProvider.otherwise('/tabs/login');
 
         $httpProvider.interceptors.push('APIInterceptor');
     })
@@ -88,6 +88,8 @@ angular.module('SimpleRESTIonic', ['ionic', 'backand', 'SimpleRESTIonic.controll
                 unauthorized();
             }
         });
+
+
 
     })
 

@@ -1,21 +1,23 @@
 <ion-view view-title="Random">
     <div ng-if="!vm.isCreating && !vm.isEditing">
         <link rel="stylesheet" type="text/css" href="random.css"> 
+        <script type="text/javascript" src="controllers.js"></script>
         <ion-content class="padding has-header">
             <!-- LIST -->
             <div class="container">
                 <center> 
                 <span id='player'></span>
-                <button class="button button-positive" ng-click="vm.goToBackand()" style="width:250px;height:50px;"> Yes, we're talking to you. </button>
+                <button class="button button-calm" x-ng-click="randomImg = true" style ="width:250px;height:50px;"> Yes, we're talking to you </button>
+
                 <p>
                     <center> 
                     <img src = "http://simpleicon.com/wp-content/uploads/right_double_quotation_mark.svg" position="center" style="width: 300px;height:300px;">
-                </center>
-
+               
     </ion-tab>
                 </p>    
             </div>
         </ion-content>
     </div ng-if>
 </ion-view>
+
 

@@ -19,8 +19,9 @@ angular.module('SimpleRESTIonic.controllers', [])
 
         function onLogin(){
             $rootScope.$broadcast('authorized');
-            $state.go('tab.dashboard');
+            $state.go('tab.login');
         }
+
 
         function signout() {
             LoginService.signout()
@@ -132,6 +133,21 @@ angular.module('SimpleRESTIonic.controllers', [])
 
         initCreateForm();
         getAll();
+
+         function randomImg() {
+            //create a new array and name it myImages
+            var myImages = new Array ();
+
+            //add images to array
+            myImages[1] = "https://s-media-cache-ak0.pinimg.com/736x/f7/9d/cc/f79dcc623ba0fad6baafb0a1441b9fd0.jpg"
+            myImages[2] = "http://media.tumblr.com/tumblr_mc7pq0dXQZ1qzyo7n.jpg"
+            myImages[3] = "http://40.media.tumblr.com/tumblr_max7rhFmBa1rw7yvuo1_500.png";
+
+
+            var rnd = Math.floor(Math.random() *myImages.length);
+            if (rnd == 0) {
+            document.write('<img src="'+myImages[rnd]+'" border =0>')}
+                }
 
     });
 
