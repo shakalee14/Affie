@@ -1,6 +1,6 @@
 /* Empty. Add your own CSS if you like */
 .tab-login {
-	background: url("https://s-media-cache-ak0.pinimg.com/564x/e2/04/dc/e204dcb087889c97bcf0aa8e3e65f184.jpg");
+	
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
@@ -9,18 +9,34 @@
     margin: auto;
     z-index: 2;
     position: relative;
+    font-size: 100px;
 }
 
-    .pane {
-        background: url("https://s-media-cache-ak0.pinimg.com/564x/e2/04/dc/e204dcb087889c97bcf0aa8e3e65f184.jpg") no-repeat center center fixed; 
-        -webkit-background-size: cover;
-        -moz-background-size: cover;
-        background-size: cover;
+* {
+    font-family: 'Open Sans';
+}
+
+.submit {color: #ef4e3a;}
+
+.button-calm {font-family: 'Open Sans';}
+
+.button-positive {font-family: 'Open Sans';}
+
+.input-label 
+    { color: #ef4e3a;
     }
-body
-        {
-            font: arial;
-            font-size: 60;
+.pane {
+    background: url("http://static1.squarespace.com/static/56a4e76925981d0fbc579ca2/56a4f85e40667aa56dcb6c53/56a52db1ab28105c1175ba81/1453665754823/?format=1000w") no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    }
+
+.padding 
+    {color:#FFFFFF;
+    font-family: 'Open Sans';
+    font-size: 14px;
+    font: monospace;
         }
 
 .icon.new-item {
@@ -42,5 +58,5 @@ body
 }
 /* Ionic Overwrite! */
 .item-icon-left .icon, .item-icon-right .icon {
-	font-size: 22px;
+	font-size: 20px;
 }

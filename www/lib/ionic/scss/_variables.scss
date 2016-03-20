@@ -2,22 +2,23 @@
 // Colors
 // -------------------------------
 
-$light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
-$positive:                        #387ef5 !default;
-$calm:                            #11c1f3 !default;
-$balanced:                        #33cd5f !default;
-$energized:                       #ffc900 !default;
-$assertive:                       #ef473a !default;
-$royal:                           #886aea !default;
-$dark:                            #444 !default;
+$light:                           ##F0F0F0  !default;
+$stable:                          ##F0F0F0  !default;
+$positive:                        ##000000  !default;
+$calm:                            ##F0F0F0  !default;
+$balanced:                        ##F0F0F0  !default;
+$energized:                       ##F0F0F0  !default;
+$assertive:                       ##F0F0F0  !default;
+$royal:                           ##F0F0F0  !default;
+$dark:                            ##F0F0F0  !default;
 
 
 // Base
 // -------------------------------
 
-$font-family-sans-serif:          "Helvetica Neue", "Roboto", "Segoe UI", sans-serif !default;
-$font-family-light-sans-serif:    "HelveticaNeue-Light", "Roboto-Light", "Segoe UI-Light", sans-serif-light !default;
+$font-family-sans-serif:           'Avenir-Black', "Avenir-Black", "Avenir-Black", "Avenir-Black", sans-serif !default;
+
+$font-family-light-sans-serif:    'Avenir-Black', "Avenir-Black", "Roboto-Light", "Avenir-Black", Avenir-Black !default;
 $font-family-serif:               serif !default;
 $font-family-monospace:           monospace !default;
 
@@ -66,23 +67,23 @@ $scroll-refresh-icon-color:       #666666 !default;
 // Buttons
 // -------------------------------
 
-$button-color:                    #222 !default;
+$button-color:                    #33FF66 !default;
 $button-block-margin:             10px !default;
 $button-clear-padding:            6px !default;
-$button-border-radius:            2px !default;
+$button-border-radius:            4px !default;
 $button-border-width:             1px !default;
 
-$button-font-size:                16px !default;
+$button-font-size:                20px !default;
 $button-height:                   42px !default;
 $button-padding:                  12px !default;
 $button-icon-size:                24px !default;
 
-$button-large-font-size:          20px !default;
+$button-large-font-size:          45px !default;
 $button-large-height:             54px !default;
 $button-large-padding:            16px !default;
 $button-large-icon-size:          32px !default;
 
-$button-small-font-size:          12px !default;
+$button-small-font-size:          50px !default;
 $button-small-height:             28px !default;
 $button-small-padding:            4px !default;
 $button-small-icon-size:          16px !default;

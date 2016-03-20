@@ -67,14 +67,18 @@ var BKStorage = (function () {
 ;var http;
 
 var config = {
-    apiUrl: "https://api.backand.com",
+    apiUrl: 'https://api.backand.com',
+    socketUrl: 'https://api.backand.com:4000',
     anonymousToken: null,
     signUpToken: null,
     isManagingHttpInterceptor: true,
     isManagingRefreshToken: true,
     runSigninAfterSignup: true,
+    callSignupOnSingInSocialError : true, // tell code to run signup after signIn error because user is not registered to application
     appName: null,
-    userProfileName: 'backand_user'
+    userProfileName: 'backand_user',
+    isMobile: false,
+    runSocket: false
 };
 
 var EVENTS = {
@@ -126,6 +130,11 @@ angular.module('backand', [])
             return this;
         };
 
+        this.setSocketUrl = function (newSocketUrl) {
+          config.socketUrl = newSocketUrl;
+          return this;
+        };
+
         // deprecated
         this.getTokenName = function () {
             return null;
@@ -171,13 +180,18 @@ angular.module('backand', [])
             return this;
         };
 
+        this.runSocket = function (runSocket) {
+          config.runSocket = runSocket == undefined ? false : runSocket;
+          return this;
+        };
+
         // $get returns the service
-        this.$get = ['BackandAuthService', 'BackandUserService', function (BackandAuthService, BackandUserService) {
-            return new BackandService(BackandAuthService, BackandUserService);
+        this.$get = ['BackandAuthService', 'BackandUserService','BackandSocketService', function (BackandAuthService, BackandUserService, BackandSocketService) {
+            return new BackandService(BackandAuthService, BackandUserService, BackandSocketService);
         }];
 
         // Backand Service
-        function BackandService(BackandAuthService, BackandUserService) {
+        function BackandService(BackandAuthService, BackandUserService, BackandSocketService) {
             var self = this;
 
             self.EVENTS = EVENTS;
@@ -222,6 +236,13 @@ angular.module('backand', [])
                 return BackandAuthService.changePassword(oldPassword, newPassword)
             };
 
+            self.setIsMobile = function(val){
+                config.isMobile = val;
+            };
+
+            self.setRunSignupAfterErrorInSigninSocial = function(val){
+                config.callSignupOnSingInSocialError = val;
+            };
 
             self.getUserDetails = function (force) {
                 return BackandUserService.getUserDetails(force)
@@ -261,6 +282,20 @@ angular.module('backand', [])
                 return config.isManagingRefreshToken && BKStorage.user.get() && BKStorage.user.get().refresh_token;
             };
 
+            //Socket.io service
+            self.isRunScoket = function () {
+              return config.runScoket;
+            };
+
+            self.socketLogin = function(){
+              if(config.runSocket)
+                BackandSocketService.login(BKStorage.token.get(), config.anonymousToken, config.appName, config.socketUrl);
+            };
+
+            self.on = function(eventName, callback){
+              BackandSocketService.on(eventName, callback);
+            };
+
             // backward compatibility
             self.socialSignIn = self.socialSignin;
             self.socialSignUp = self.socialSignup;
@@ -270,6 +305,10 @@ angular.module('backand', [])
         $injector.invoke(['$http', function ($http) {
             // Cannot inject http to provider, so doing it here:
             http = $http;
+        }]);
+        $injector.invoke(['Backand', function (Backand) {
+          // Cannot inject http to provider, so doing it here:
+          Backand.socketLogin();
         }]);
     }]);
 ;angular.module('backand')
@@ -321,11 +360,14 @@ function HttpInterceptor ($q, Backand, BackandHttpBufferService, BackandAuthServ
         }
     }
 }
-;angular.module('backand').service('BackandAuthService', ['$q', '$rootScope', 'BackandHttpBufferService', BackandAuthService]);
+;angular.module('backand')
+    .service('BackandAuthService', ['$q', '$rootScope', 'BackandHttpBufferService','BackandSocketService', BackandAuthService]);
 
-function BackandAuthService ($q, $rootScope, BackandHttpBufferService) {
+function BackandAuthService ($q, $rootScope, BackandHttpBufferService, BackandSocketService) {
     var self = this;
     var authenticating = false;
+    var NOT_SIGNEDIN_ERROR = 'The user is not signed up to';
+    var dummyReturnAddress = 'http://www.backandaaaa.com';
 
     var urls = {
         signup: '/1/user/signup',
@@ -394,26 +436,112 @@ function BackandAuthService ($q, $rootScope, BackandHttpBufferService) {
         return socialAuth(provider, true, spec);
     };
 
-    function socialAuth (provider, isSignUp, spec) {
+
+    function mobileSocialLoginInner(ref, isSignUp, provider, spec) {
+        ref.addEventListener('loadstart', function (e) {
+            if (e.url.indexOf(dummyReturnAddress) == 0) { // mean startWith
+                ref.close();
+
+                // error return from server
+                if (e.url.indexOf('error=') > -1) {
+                    var dataStr = decodeURI(e.url).split('error=')[1];
+                    var userData = JSON.parse(dataStr);
+                    if (!isSignUp && config.callSignupOnSingInSocialError && userData.message.indexOf(NOT_SIGNEDIN_ERROR) > -1) {  // check is right error
+                        socialAuth(provider, true, spec);
+                        return;
+                    }
+
+                    var rejection = {
+                        data: userData.message + ' (signing in with ' + userData.provider + ')'
+                    };
+
+                    rejection.error_description = rejection.data;
+                    self.loginPromise.reject(rejection);
+                    return;
+                }
+
+                // login is OK
+                var dataStr = decodeURI(e.url).split('/#/?data=')[1];
+                var userData = JSON.parse(dataStr);
+                if (self.inSocialSignup) {
+                    self.inSocialSignup = false;
+                    $rootScope.$broadcast(EVENTS.SIGNUP);
+                }
+                signinWithToken(userData);
+            }
+        });
+    }
+
+    function socialAuth(provider, isSignUp, spec) {
         if (!socialProviders[provider]) {
             throw Error('Unknown Social Provider');
         }
 
         self.loginPromise = $q.defer();
 
-        self.socialAuthWindow = window.open(
-            config.apiUrl + '/1/'
-            + getSocialUrl(provider, isSignUp)
-            + '&appname=' + config.appName
-            + '&returnAddress=',
-            'id1',
-            spec || 'left=1, top=1, width=600, height=600');
+        if(config.isMobile){
+            var ref = window.open(
+                config.apiUrl + '/1/'
+                + getSocialUrl(provider, isSignUp)
+                + '&appname=' + config.appName
+                + '&returnAddress='+ dummyReturnAddress,
+                'id1',
+                spec || 'left=1, top=1, width=600, height=600');
 
-        window.addEventListener('message', setUserDataFromToken, false);
+            mobileSocialLoginInner(ref, isSignUp, provider, spec);
+        }
+        else {
+            self.socialAuthWindow = window.open(
+                config.apiUrl + '/1/'
+                + getSocialUrl(provider, isSignUp)
+                + '&appname=' + config.appName
+                + '&returnAddress=',
+                'id1',
+                spec || 'left=1, top=1, width=600, height=600');
+
+            window.addEventListener('message', (function(provider, spec){ return function(e) { setUserDataFromToken(e, provider, spec)}})(provider,spec), false);
+        }
+
         return self.loginPromise.promise;
     }
 
-    function setUserDataFromToken (event) {
+
+    function socialAuth(provider, isSignUp, spec) {
+
+        if (!socialProviders[provider]) {
+            throw Error('Unknown Social Provider');
+        }
+
+        self.loginPromise = $q.defer();
+
+        if(config.isMobile){
+
+            var ref = window.open(
+                config.apiUrl + '/1/'
+                + getSocialUrl(provider, isSignUp)
+                + '&appname=' + config.appName
+                + '&returnAddress='+ dummyReturnAddress,
+                'id1',
+                spec || 'left=1, top=1, width=600, height=600');
+
+            mobileSocialLoginInner(ref, isSignUp, provider, spec);
+        }
+        else {
+            self.socialAuthWindow = window.open(
+                config.apiUrl + '/1/'
+                + getSocialUrl(provider, isSignUp)
+                + '&appname=' + config.appName
+                + '&returnAddress=',
+                'id1',
+                spec || 'left=1, top=1, width=600, height=600');
+
+            window.addEventListener('message', (function(provider, spec){ return function(e) { setUserDataFromToken(e, provider, spec)}})(provider,spec), false);
+        }
+        return self.loginPromise.promise;
+    }
+
+    function setUserDataFromToken(event, provider, spec) {
+        console.log(event, provider, spec);
         self.socialAuthWindow.close();
         self.socialAuthWindow = null;
 
@@ -424,26 +552,32 @@ function BackandAuthService ($q, $rootScope, BackandHttpBufferService) {
         var userData = JSON.parse(event.data);
         if (userData.error) {
 
+            if (config.callSignupOnSingInSocialError && userData.error.message.indexOf(NOT_SIGNEDIN_ERROR) > -1) {  // check is right error
+                socialAuth(provider, true, spec);
+                return;
+            }
+
             var rejection = {
                 data: userData.error.message + ' (signing in with ' + userData.error.provider + ')'
             };
             rejection.error_description = rejection.data;
             self.loginPromise.reject(rejection);
 
-        } else if (userData.data) {
+        }
+        else if (userData.data) {
             if (self.inSocialSignup) {
                 self.inSocialSignup = false;
                 $rootScope.$broadcast(EVENTS.SIGNUP);
             }
             return signinWithToken(userData.data);
 
-        } else {
+        }
+        else {
             self.loginPromise.reject();
         }
     }
 
     // tokens authentication
-
     function signinWithToken (userData) {
         var tokenData = {
             grant_type: 'password',
@@ -512,6 +646,10 @@ function BackandAuthService ($q, $rootScope, BackandHttpBufferService) {
 
                 BackandHttpBufferService.retryAll();
                 $rootScope.$broadcast(EVENTS.SIGNIN);
+
+                if(config.runSocket)
+                  BackandSocketService.login(BKStorage.token.get(), config.anonymousToken, config.appName, config.socketUrl);
+
 
             } else if (self.loginPromise) {
                 self.loginPromise.reject('token is undefined');
@@ -616,7 +754,56 @@ function BackandAuthService ($q, $rootScope, BackandHttpBufferService) {
     }
 
 })();
-;angular.module('backand').service('BackandUserService', ['$q', BackandUserService]);
+;/**
+ * Created by Itay on 11/17/15.
+ */
+angular.module('backand')
+    .service('BackandSocketService', ['$rootScope', BackandSocketService]);
+
+function BackandSocketService ($rootScope) {
+
+  var self = this;
+
+  self.socket = {on: function(){}}; //io.connect('http://localhost:4000');
+
+  self.login = function(token, anonymousToken, appName, url){
+    self.socket = io.connect(url, {'forceNew':true });
+
+    self.socket.on('connect', function(){
+      console.log('connected');
+      self.socket.emit("login", token, anonymousToken, appName);
+    });
+
+    self.socket.on('disconnect', function() {
+        console.log('disconnect');
+    });
+
+    self.socket.on('reconnecting', function() {
+      console.log('reconnecting');
+    });
+
+  };
+
+  self.on = function (eventName, callback) {
+    self.socket.on(eventName, function () {
+      var args = arguments;
+      $rootScope.$apply(function () {
+        callback.apply(self.socket, args);
+      });
+    });
+  };
+
+  self.emit = function (eventName, data, callback) {
+    self.socket.emit(eventName, data, function () {
+      var args = arguments;
+      $rootScope.$apply(function () {
+        if (callback) {
+          callback.apply(self.socket, args);
+        }
+      });
+    })
+  }
+};angular.module('backand').service('BackandUserService', ['$q', BackandUserService]);
 
 function BackandUserService ($q) {
     var self = this;
