@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'SimpleRESTIonic' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('SimpleRESTIonic', ['ionic', 'backand', 'SimpleRESTIonic.controllers', 'SimpleRESTIonic.services'])
+var ionicApp = angular.module('SimpleRESTIonic',['ionic', 'backand', 'SimpleRESTIonic.controllers', 'SimpleRESTIonic.services', 'ngCordova'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -22,7 +22,7 @@ angular.module('SimpleRESTIonic', ['ionic', 'backand', 'SimpleRESTIonic.controll
     })
     .config(function (BackandProvider, $stateProvider, $urlRouterProvider, $httpProvider) {
 
-        BackandProvider.setAppName('Affie'); // change here to your app name
+        BackandProvider.setAppName('affie'); // change here to your app name
         BackandProvider.setSignUpToken('73ca30ae-0cd1-47c5-ac93-d05082e914a2'); //token that enable sign up. see http://docs.backand.com/en/latest/apidocs/security/index.html#sign-up
         BackandProvider.setAnonymousToken('924ccf3b-4b4f-4171-9063-b394c3c82e13'); // token is for anonymous login. see http://docs.backand.com/en/latest/apidocs/security/index.html#anonymous-access
 
@@ -46,7 +46,8 @@ angular.module('SimpleRESTIonic', ['ionic', 'backand', 'SimpleRESTIonic.controll
                 url: '/random',
                 views: {
                     'tab-random': {
-                        templateUrl: 'templates/tab-random.html'
+                        templateUrl: 'templates/tab-random.html',
+                        controller: 'RandomCtrl as r'
                     }
                 }
             })
@@ -88,8 +89,11 @@ angular.module('SimpleRESTIonic', ['ionic', 'backand', 'SimpleRESTIonic.controll
                 unauthorized();
             }
         });
+ 
 
 
 
-    })
+
+
+    });
 

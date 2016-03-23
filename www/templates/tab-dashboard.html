@@ -3,16 +3,18 @@
         <ion-content class="padding has-header">
             <!-- LIST -->
             <div class="bar bar-header">
+                
                 <span ng-click="vm.isCreating = true"><i class='icon ion-plus-round new-item'> New Affie </i></span>
+
             </div>
             <div class="bar bar-subheader">
                 <div class="list card" ng-repeat="object in vm.data"
                      ng-class="{'active':vm.isCurrent(object.id)}">
                     <div class="item item-icon-right item-icon-left">
-                        <i class="ion-compose icon" ng-click="vm.setEdited(object)"></i>
+                        <i class="ion-compose icon" ng-click="vm.setEdited(object)"> Edit  </i>
 
-                        <h2 class="text-center">{{object.name}}</h2>
-                        <i class="icon ion-close-round" ng-click="vm.delete(object.id)"></i>
+                        <h2 class="text-center"> {{object.name}}</h2>
+                        <i class="icon ion-close-round" ng-click="vm.delete(object.id)"> Delete </i>
                     </div>
                     <div class="item item-body">
                         {{object.description}}
@@ -26,7 +28,7 @@
         <ion-content class="padding has-header">
             <!-- CREATING -->
             <div class="bar bar-header">
-                <h2 class="title"> Record Affie </h2>
+                <h2 class="title"> Create Affie </h2>
                 <span ng-click="vm.cancelCreate()" class="cancel-create">Cancel</span>
             </div>
             <div class="bar bar-subheader">
@@ -47,15 +49,13 @@
                         </label>
                     </div>
                 <center>
+
+            
                      <head>
-    <script src="http://lab.subinsb.com/projects/jquery/core/jquery-2.1.1.js"></script>
-    <script src="http://lab.subinsb.com/projects/jquery/voice/recorder.js"></script>
-    <script src="http://lab.subinsb.com/projects/jquery/voice/jquery.voice.min.js"></script>
-    <script src="cdn/record.js"></script>
    </head>
    <body>
     <div id="content">
-      <input class="button" type="checkbox" id="live"/>
+      
       <style>
       .button{
         display: inline-block;
@@ -110,23 +110,33 @@
                       ng-submit="vm.update(vm.edited)" novalidate>
                     <div class="list">
                         <label class="item item-input item-stacked-label">
-                            <span class="input-label">Note Name</span>
+                            <span class="input-label">Affie Name</span>
                             <input type="text" class="form-control"
                                    ng-model="vm.edited.name"
                                    placeholder="Enter name">
                         </label>
                         <label class="item item-input item-stacked-label">
-                            <span class="input-label">Write Message Here</span>
+                            <span class="input-label">Write Here</span>
                     <textarea class="form-control"
                               ng-model="vm.edited.description"
                               placeholder="Enter description"></textarea>
-
                         </label>
+                        <label class="item">
+                       <center> 
+                       <button class="button button-block button-positive" type="notification"> Add Alarm </button>
+
+                        </label> 
+                      </center>
+
+
                     </div>
                     <button class="button button-block button-positive" type="submit">Save</button>
-                </form>
 
+                </form>
             </div>
+
+             
+
         </ion-content>
     </div>
 </ion-view>

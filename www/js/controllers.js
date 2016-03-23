@@ -38,6 +38,7 @@ angular.module('SimpleRESTIonic.controllers', [])
         login.anonymousLogin = anonymousLogin;
     })
 
+
     .controller('DashboardCtrl', function (ItemsModel, $rootScope) {
         var vm = this;
 
@@ -131,23 +132,29 @@ angular.module('SimpleRESTIonic.controllers', [])
             $rootScope.$broadcast('logout');
         }
 
-        initCreateForm();
-        getAll();
 
-         function randomImg() {
-            //create a new array and name it myImages
-            var myImages = new Array ();
+        {
+        initCreateForm();
+        getAll();}
+
+
+    })
+
+  .controller('RandomCtrl', function()  {
+        var random = this;
+
+        "Button-calm".onclick = function randomImg() {
+
+            //array for random image generator
+            var images = new Array ("audrelorde.jpg","img/assatashakur.jpg","img/marshapjohnson.png","img/semillas.jpg","img/iyanla-vanzant.jpg","img/nikkigiovanni.png","img/ninasimone.jpg", "img/revolution.jpg", "img/alicewalker.png", "img/mayaangelou.jpg");
 
             //add images to array
-            myImages[1] = "https://s-media-cache-ak0.pinimg.com/736x/f7/9d/cc/f79dcc623ba0fad6baafb0a1441b9fd0.jpg"
-            myImages[2] = "http://media.tumblr.com/tumblr_mc7pq0dXQZ1qzyo7n.jpg"
-            myImages[3] = "http://40.media.tumblr.com/tumblr_max7rhFmBa1rw7yvuo1_500.png";
 
+            var length = images.length;
+            var which = Math.round(Math.random()*(length-1));
 
-            var rnd = Math.floor(Math.random() *myImages.length);
-            if (rnd == 0) {
-            document.write('<img src="'+myImages[rnd]+'" border =0>')}
-                }
+            document.write('<img src="' + images[which] +'"/>');
 
+        }
     });
 

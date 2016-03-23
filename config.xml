@@ -19,5 +19,7 @@
   </feature>
 <feature name="SplashScreen">
     <param name="ios-package" value="CDVSplashScreen" onload="true"/>
+    <preference name="SplashScreen" value="screen" />
+    <preference name="SplashScreenDelay" value="4000" />
 </feature>
 </widget>

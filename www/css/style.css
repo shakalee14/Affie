@@ -12,6 +12,10 @@
     font-size: 100px;
 }
 
+.img-circle {
+    border-radius: 50%;
+    }
+
 * {
     font-family: 'Open Sans';
 }
@@ -20,20 +24,21 @@
 
 .button-calm {font-family: 'Open Sans';}
 
-.button-positive {font-family: 'Open Sans';}
+.button-positive {font-family: 'Open Sans'; color: #00000 ;}
 
 .input-label 
     { color: #ef4e3a;
     }
 .pane {
-    background: url("http://static1.squarespace.com/static/56a4e76925981d0fbc579ca2/56a4f85e40667aa56dcb6c53/56a52db1ab28105c1175ba81/1453665754823/?format=1000w") no-repeat center center fixed; 
+    background: url("http://static1.squarespace.com/static/56a4e76925981d0fbc579ca2/56a4f85e40667aa56dcb6c53/56a58111c647ad2469ba5b9c/1453687084730/DSC_0091.JPG?format=1500w") no-repeat center center fixed; 
     -webkit-background-size: cover;
     -moz-background-size: cover;
     background-size: cover;
     }
 
-.padding 
-    {color:#FFFFFF;
+
+.padding
+    {color:#000000;
     font-family: 'Open Sans';
     font-size: 14px;
     font: monospace;
@@ -42,7 +47,7 @@
 .icon.new-item {
 	position: absolute;
 	right: 20px;
-	font-size: 20px;
+	font-size: 14px;
 	bottom: 13px;
 }
 .cancel-create {
@@ -58,5 +63,5 @@
 }
 /* Ionic Overwrite! */
 .item-icon-left .icon, .item-icon-right .icon {
-	font-size: 20px;
+	font-size: 16px;
 }
