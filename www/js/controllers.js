@@ -163,9 +163,22 @@ angular.module('SimpleRESTIonic.controllers', [])
 
     })
 
-function pictureChange()
+function pictureChange(theImage)
 {
-   document.getElementById("theImage").src=("img/marshapjohnson.png","img/semillas.jpg","img/iyanla-vanzant.jpg","img/nikkigiovanni.png","img/ninasimone.jpg");
-  
+    document.getElementById("theImage").src=("img/marshapjohnson.png","img/semillas.jpg","img/iyanla-vanzant.jpg","img/nikkigiovanni.png","img/ninasimone.jpg");
+
+      
   }
+
+  function changeImage() {
+    var image = document.getElementById('myImage');
+    if (image.src.match("marshapjohnson")) {
+        image.src = "img/assatashakur.jpg";
+    } else {
+        image.src = "img/marshapjohnson.png";
+    }
+}
+
+
+
 
