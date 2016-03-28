@@ -1,3 +1,4 @@
+
 angular.module('SimpleRESTIonic.controllers', [])
 
     .controller('LoginCtrl', function (Backand, $state, $rootScope, LoginService) {
@@ -140,21 +141,31 @@ angular.module('SimpleRESTIonic.controllers', [])
 
     })
 
-  .controller('RandomCtrl', function()  {
+.controller('RandomCtrl', function()  {
+        
+
         var random = this;
 
-        "Button-calm".onclick = function randomImg() {
+      function randomImg() {
 
             //array for random image generator
-            var images = new Array ("audrelorde.jpg","img/assatashakur.jpg","img/marshapjohnson.png","img/semillas.jpg","img/iyanla-vanzant.jpg","img/nikkigiovanni.png","img/ninasimone.jpg", "img/revolution.jpg", "img/alicewalker.png", "img/mayaangelou.jpg");
+            var images = new Array 
+            ("img/audrelorde.jpg","img/assatashakur.jpg","img/marshapjohnson.png","img/semillas.jpg","img/iyanla-vanzant.jpg","img/nikkigiovanni.png","img/ninasimone.jpg", "img/revolution.jpg", "img/alicewalker.png", "img/mayaangelou.jpg");
 
             //add images to array
 
             var length = images.length;
-            var which = Math.round(Math.random()*(length-1));
+            var which = Math.round(Math.random()*(length-1))
+            if (which == 0)
+            which = 1
+            document.write('<img src="' + images[which] +'"/>');}
 
-            document.write('<img src="' + images[which] +'"/>');
 
-        }
-    });
+    })
+
+function pictureChange()
+{
+   document.getElementById("theImage").src=("img/marshapjohnson.png","img/semillas.jpg","img/iyanla-vanzant.jpg","img/nikkigiovanni.png","img/ninasimone.jpg");
+  
+  }
 

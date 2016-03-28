@@ -61,4 +61,6 @@ angular.module('SimpleRESTIonic.services', [])
         service.signout = function () {
             return Backand.signout();
         };
+
+
     });
