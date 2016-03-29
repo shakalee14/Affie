@@ -156,7 +156,7 @@ angular.module('SimpleRESTIonic.controllers', [])
 
             var length = images.length;
             var which = Math.round(Math.random()*(length-1))
-            if (which == 0)
+            if (which === 0)
             which = 1
             document.write('<img src="' + images[which] +'"/>');}
 
@@ -174,7 +174,7 @@ function pictureChange(theImage)
     var image = document.getElementById('myImage');
     if (image.src.match("marshapjohnson")) {
         image.src = "img/assatashakur.jpg";
-    } else {
+    } else  {
         image.src = "img/marshapjohnson.png";
     }
 }
